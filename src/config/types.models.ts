@@ -4,9 +4,9 @@ import type { SecretInput } from "./types.secrets.js";
 export const MODEL_APIS = [
   "openai-completions",
   "openai-responses",
+  "azure-openai-responses",
   "openai-codex-responses",
   "anthropic-messages",
-  "azure-openai-responses",
   "google-generative-ai",
   "github-copilot",
   "bedrock-converse-stream",
