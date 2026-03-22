@@ -83,16 +83,20 @@ export function formatUpdateOneLiner(update: UpdateCheckResult): string {
 
   const appendRegistryUpdateSummary = () => {
     if (update.registry?.latestVersion) {
-      const cmp = compareSemverStrings(VERSION, update.registry.latestVersion);
+      const latest = update.registry.latestVersion;
+      let cmp = compareSemverStrings(VERSION, latest);
+      if (cmp != null && cmp < 0 && shouldTreatCalVerBuildAsUpToDate(VERSION, latest)) {
+        cmp = 0;
+      }
       if (cmp === 0) {
         if (update.installKind !== "git") {
           parts.push("up to date");
         }
-        parts.push(`npm latest ${update.registry.latestVersion}`);
+        parts.push(`npm latest ${latest}`);
       } else if (cmp != null && cmp < 0) {
-        parts.push(`npm update ${update.registry.latestVersion}`);
+        parts.push(`npm update ${latest}`);
       } else {
-        parts.push(`npm latest ${update.registry.latestVersion} (local newer)`);
+        parts.push(`npm latest ${latest} (local newer)`);
       }
       return;
     }
