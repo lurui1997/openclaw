@@ -254,11 +254,6 @@ function denyListMatchesDefaultDangerousDenyBaseline(denyList: readonly string[]
   return true;
 }
 
-function hasNonemptyGatewayAllowCommands(cfg: OpenClawConfig): boolean {
-  const raw = cfg.gateway?.nodes?.allowCommands;
-  return Array.isArray(raw) && raw.some((x) => Boolean(normalizeNodeCommand(x)));
-}
-
 function looksLikeNodeCommandPattern(value: string): boolean {
   if (!value) {
     return false;
@@ -1041,10 +1036,11 @@ export function collectNodeDenyCommandPatternFindings(cfg: OpenClawConfig): Secu
       recognizedIds.has(entry) &&
       !allowUnionDenyCleared.has(entry),
   );
-  const redundantForFinding =
-    denyListMatchesDefaultDangerousDenyBaseline(denyList) && !hasNonemptyGatewayAllowCommands(cfg)
-      ? []
-      : redundantExact;
+  // Wizard baseline is exactly DEFAULT_DANGEROUS_NODE_COMMANDS; suppress redundant-noise for that
+  // whole list even when allowCommands adds unrelated (or overlapping dangerous) entries—see PR #51962.
+  const redundantForFinding = denyListMatchesDefaultDangerousDenyBaseline(denyList)
+    ? []
+    : redundantExact;
   if (patternLike.length === 0 && unknownExact.length === 0 && redundantForFinding.length === 0) {
     return findings;
   }

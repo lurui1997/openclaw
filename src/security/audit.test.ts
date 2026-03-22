@@ -1351,6 +1351,18 @@ description: test skill
           },
         } satisfies OpenClawConfig,
       },
+      {
+        kind: "absent",
+        name: "wizard dangerous deny baseline stays quiet with non-dangerous allowCommands entries",
+        cfg: {
+          gateway: {
+            nodes: {
+              denyCommands: [...DEFAULT_DANGEROUS_NODE_COMMANDS],
+              allowCommands: ["camera.list"],
+            },
+          },
+        } satisfies OpenClawConfig,
+      },
     ];
 
     await Promise.all(
