@@ -127,7 +127,7 @@ export function createTelegramRetryRunner(params: {
         ? (info) => {
             const maxRetries = Math.max(1, info.maxAttempts - 1);
             log.warn(
-              `telegram send retry ${info.attempt}/${maxRetries} for ${info.label ?? label ?? "request"} in ${info.delayMs}ms: ${formatErrorMessage(info.err)}`,
+              `telegram send retry ${info.attempt}/${maxRetries} for ${info.label ?? label ?? "request"} in ${info.delayMs}ms: ${formatErrorMessageWithCauses(info.err)}`,
             );
           }
         : undefined,
